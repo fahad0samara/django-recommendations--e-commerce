@@ -367,9 +367,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 4. Push to the branch
 5. Create a new Pull Request
 
-## 📞 Support
 
-For support, email support@example.com or create an issue in the repository.
 
 ## 🙏 Acknowledgments
 
