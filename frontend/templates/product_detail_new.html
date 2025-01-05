@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Smart Shop{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <!-- Main Product Section -->
+    <div class="bg-gray-800 rounded-lg p-8 mb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Product Images -->
+            <div class="product-image-gallery">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-[500px] object-cover rounded-lg">
+                {% else %}
+                    <div class="w-full h-[500px] bg-gray-700 flex items-center justify-center rounded-lg">
+                        <span class="text-gray-500">No image available</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Product Info -->
+            <div class="space-y-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-white mb-2">{{ product.name }}</h1>
+                    <p class="text-gray-400">{{ product.description }}</p>
+                </div>
+
+                <!-- Price and Stock -->
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="text-3xl font-bold text-white">${{ product.price }}</span>
+                        {% if product.original_price %}
+                            <div class="mt-2">
+                                <span class="text-gray-400 line-through">${{ product.original_price }}</span>
+                                <span class="text-sm bg-red-600 text-white px-2 py-1 rounded-full ml-2">{{ discount }}% OFF</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-gray-400">Availability</div>
+                        {% if product.stock > 0 %}
+                            <div class="text-green-500">In Stock ({{ product.stock }})</div>
+                        {% else %}
+                            <div class="text-red-500">Out of Stock</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Add to Cart Form -->
+                <form id="addToCartForm" action="{% url 'add_to_cart' product.id %}" method="post" class="mt-6">
+                    {% csrf_token %}
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <button type="button" onclick="updateQuantity(-1)" class="quantity-btn">-</button>
+                            <input type="number" name="quantity" id="quantityInput" value="1" min="1" max="{{ product.stock }}" class="w-16 text-center bg-gray-700 border border-gray-600 rounded-lg mx-2 text-white">
+                            <button type="button" onclick="updateQuantity(1)" class="quantity-btn">+</button>
+                        </div>
+                        {% if product.stock > 0 %}
+                            <button type="submit" class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-colors">
+                                Add to Cart
+                            </button>
+                        {% else %}
+                            <button type="button" disabled class="flex-1 bg-gray-600 text-gray-400 py-3 px-6 rounded-lg font-semibold cursor-not-allowed">
+                                Out of Stock
+                            </button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Similar Products Section -->
+    {% if similar_products %}
+    <div class="bg-gray-800 rounded-lg p-8 mb-8">
+        <h2 class="text-2xl font-bold text-white mb-6">Similar Products</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for similar in similar_products %}
+            <div class="bg-gray-700 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+                <a href="{% url 'product_detail' similar.id %}" class="block">
+                    {% if similar.image %}
+                        <img src="{{ similar.image.url }}" alt="{{ similar.name }}" class="w-full h-48 object-cover">
+                    {% else %}
+                        <div class="w-full h-48 bg-gray-600 flex items-center justify-center">
+                            <span class="text-gray-400">No image</span>
+                        </div>
+                    {% endif %}
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-2">{{ similar.name }}</h3>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-purple-400">${{ similar.price }}</span>
+                            {% if similar.original_price %}
+                                <span class="text-sm text-gray-400 line-through">${{ similar.original_price }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Personalized Recommendations Section -->
+    {% if personalized_recommendations %}
+    <div class="bg-gray-800 rounded-lg p-8">
+        <h2 class="text-2xl font-bold text-white mb-6">Recommended For You</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for recommended in personalized_recommendations %}
+            <div class="bg-gray-700 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+                <a href="{% url 'product_detail' recommended.id %}" class="block">
+                    {% if recommended.image %}
+                        <img src="{{ recommended.image.url }}" alt="{{ recommended.name }}" class="w-full h-48 object-cover">
+                    {% else %}
+                        <div class="w-full h-48 bg-gray-600 flex items-center justify-center">
+                            <span class="text-gray-400">No image</span>
+                        </div>
+                    {% endif %}
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-2">{{ recommended.name }}</h3>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-purple-400">${{ recommended.price }}</span>
+                            {% if recommended.original_price %}
+                                <span class="text-sm text-gray-400 line-through">${{ recommended.original_price }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-y-full opacity-0 z-50">
+    <div class="toast-message"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateQuantity(change) {
+    const input = document.getElementById('quantityInput');
+    const currentValue = parseInt(input.value) || 1;
+    const newValue = Math.max(1, Math.min(currentValue + change, {{ product.stock }}));
+    input.value = newValue;
+}
+
+// Add to cart form submission
+const addToCartForm = document.getElementById('addToCartForm');
+if (addToCartForm) {
+    addToCartForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+        
+        // Disable button and show loading state
+        submitButton.disabled = true;
+        submitButton.innerHTML = `
+            <svg class="animate-spin h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="ml-2">Adding to Cart...</span>
+        `;
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 500) {
+                    throw new Error('Server error. Please try again later.');
+                }
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Error adding to cart');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                showToast('Product added to cart successfully!', 'success');
+                
+                // Update cart count in navbar
+                const cartCount = document.querySelector('.cart-count');
+                if (cartCount) {
+                    cartCount.textContent = data.cart_count;
+                    cartCount.style.display = data.cart_count > 0 ? 'flex' : 'none';
+                }
+                
+                // Reset form
+                this.reset();
+                document.getElementById('quantityInput').value = "1";
+                
+                // Add success animation to button
+                submitButton.classList.add('success');
+                setTimeout(() => submitButton.classList.remove('success'), 1000);
+            } else {
+                throw new Error(data.error || 'Error adding to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast(error.message, 'error');
+        })
+        .finally(() => {
+            // Re-enable button and restore original text
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalText;
+        });
+    });
+}
+
+// Toast functionality
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastMessage = toast.querySelector('.toast-message');
+    
+    // Set toast style based on type
+    toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-50 ${
+        type === 'success' ? 'bg-green-600' : 'bg-red-600'
+    } text-white`;
+    
+    toastMessage.textContent = message;
+    
+    // Show toast
+    toast.classList.remove('translate-y-full', 'opacity-0');
+    
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+        toast.classList.add('translate-y-full', 'opacity-0');
+    }, 3000);
+}
+</script>
+
+<style>
+.quantity-btn {
+    @apply w-8 h-8 rounded-lg bg-gray-700 text-white flex items-center justify-center hover:bg-gray-600 transition-colors;
+}
+
+.quantity-btn:disabled {
+    @apply opacity-50 cursor-not-allowed hover:bg-gray-700;
+}
+
+button[type="submit"].success {
+    @apply bg-green-600;
+}
+
+button[type="submit"].success:hover {
+    @apply bg-green-700;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,213 @@
+[
+    {
+        "model": "recommendations.category",
+        "pk": 1,
+        "fields": {
+            "name": "Electronics",
+            "description": "Explore our electronics collection",
+            "image": "electronics.jpg",
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618"
+        }
+    },
+    {
+        "model": "recommendations.category",
+        "pk": 2,
+        "fields": {
+            "name": "Fashion",
+            "description": "Explore our fashion collection",
+            "image": "fashion.jpg",
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618"
+        }
+    },
+    {
+        "model": "recommendations.category",
+        "pk": 3,
+        "fields": {
+            "name": "Home & Living",
+            "description": "Explore our home & living collection",
+            "image": "home.jpg",
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618"
+        }
+    },
+    {
+        "model": "recommendations.product",
+        "pk": 1,
+        "fields": {
+            "name": "Premium Wireless Earbuds",
+            "description": "High-quality wireless earbuds with noise cancellation",
+            "price": "129.99",
+            "image": "earbuds.jpg",
+            "category": 1,
+            "rating": 4.5,
+            "stock": 45,
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618"
+        }
+    },
+    {
+        "model": "recommendations.product",
+        "pk": 2,
+        "fields": {
+            "name": "Smart Fitness Watch",
+            "description": "Track your health and stay connected",
+            "price": "199.99",
+            "image": "smartwatch.jpg",
+            "category": 1,
+            "rating": 4.7,
+            "stock": 30,
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618"
+        }
+    },
+    {
+        "model": "recommendations.product",
+        "pk": 3,
+        "fields": {
+            "name": "Classic Leather Backpack",
+            "description": "Stylish and durable everyday backpack",
+            "price": "79.99",
+            "image": "backpack.jpg",
+            "category": 2,
+            "rating": 4.3,
+            "stock": 25,
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618"
+        }
+    },
+    {
+        "model": "recommendations.product",
+        "pk": 4,
+        "fields": {
+            "name": "Premium Sunglasses",
+            "description": "UV protection with modern design",
+            "price": "149.99",
+            "image": "sunglasses.jpg",
+            "category": 2,
+            "rating": 4.6,
+            "stock": 15,
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618"
+        }
+    },
+    {
+        "model": "recommendations.product",
+        "pk": 5,
+        "fields": {
+            "name": "Smart LED Light Bulbs",
+            "description": "Voice-controlled, multi-color LED bulbs",
+            "price": "39.99",
+            "image": "bulbs.jpg",
+            "category": 3,
+            "rating": 4.4,
+            "stock": 60,
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618"
+        }
+    },
+    {
+        "model": "recommendations.product",
+        "pk": 6,
+        "fields": {
+            "name": "Premium Coffee Maker",
+            "description": "Programmable coffee maker with thermal carafe",
+            "price": "159.99",
+            "image": "coffee-maker.jpg",
+            "category": 3,
+            "rating": 4.8,
+            "stock": 20,
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618"
+        }
+    },
+    {
+        "model": "recommendations.discount",
+        "pk": 1,
+        "fields": {
+            "name": "Mega Tech Sale",
+            "description": "Exclusive discounts on premium electronics and gadgets",
+            "discount_type": "percentage",
+            "value": "38",
+            "start_date": "2025-01-03",
+            "end_date": "2025-02-02",
+            "max_uses": 1000,
+            "current_uses": 104,
+            "min_purchase": "199.99",
+            "is_featured": true,
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618",
+            "products": [
+                1,
+                2
+            ]
+        }
+    },
+    {
+        "model": "recommendations.discount",
+        "pk": 2,
+        "fields": {
+            "name": "Special Electronics Deals",
+            "description": "Save big on electronics items",
+            "discount_type": "percentage",
+            "value": "28",
+            "start_date": "2025-01-03",
+            "end_date": "2025-01-31",
+            "max_uses": 117,
+            "current_uses": 32,
+            "min_purchase": "87.26",
+            "is_featured": false,
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618",
+            "products": [
+                1,
+                2
+            ]
+        }
+    },
+    {
+        "model": "recommendations.discount",
+        "pk": 3,
+        "fields": {
+            "name": "Special Fashion Deals",
+            "description": "Save big on fashion items",
+            "discount_type": "fixed",
+            "value": "47",
+            "start_date": "2025-01-03",
+            "end_date": "2025-01-29",
+            "max_uses": 162,
+            "current_uses": 25,
+            "min_purchase": "85.64",
+            "is_featured": false,
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618",
+            "products": [
+                3,
+                4
+            ]
+        }
+    },
+    {
+        "model": "recommendations.discount",
+        "pk": 4,
+        "fields": {
+            "name": "Special Home & Living Deals",
+            "description": "Save big on home & living items",
+            "discount_type": "percentage",
+            "value": "12",
+            "start_date": "2025-01-03",
+            "end_date": "2025-01-19",
+            "max_uses": 312,
+            "current_uses": 41,
+            "min_purchase": "104.02",
+            "is_featured": false,
+            "created_at": "2025-01-03T19:02:29.928618",
+            "updated_at": "2025-01-03T19:02:29.928618",
+            "products": [
+                5,
+                6
+            ]
+        }
+    }
+]

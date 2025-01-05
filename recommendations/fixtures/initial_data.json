@@ -1,0 +1,120 @@
+[
+    {
+        "model": "recommendations.category",
+        "pk": 1,
+        "fields": {
+            "name": "Electronics",
+            "description": "Latest gadgets and electronic devices",
+            "image": "electronics.jpg"
+        }
+    },
+    {
+        "model": "recommendations.category",
+        "pk": 2,
+        "fields": {
+            "name": "Fashion",
+            "description": "Trendy clothing and accessories",
+            "image": "fashion.jpg"
+        }
+    },
+    {
+        "model": "recommendations.category",
+        "pk": 3,
+        "fields": {
+            "name": "Home & Living",
+            "description": "Home decor and furniture",
+            "image": "home.jpg"
+        }
+    },
+    {
+        "model": "recommendations.product",
+        "pk": 1,
+        "fields": {
+            "name": "Smart Watch Pro",
+            "description": "Advanced smartwatch with health tracking",
+            "price": "299.99",
+            "image": "smartwatch.jpg",
+            "category": 1,
+            "rating": 4.5,
+            "stock": 50
+        }
+    },
+    {
+        "model": "recommendations.product",
+        "pk": 2,
+        "fields": {
+            "name": "Wireless Earbuds",
+            "description": "Premium wireless earbuds with noise cancellation",
+            "price": "159.99",
+            "image": "earbuds.jpg",
+            "category": 1,
+            "rating": 4.8,
+            "stock": 100
+        }
+    },
+    {
+        "model": "recommendations.product",
+        "pk": 3,
+        "fields": {
+            "name": "Designer Backpack",
+            "description": "Stylish and functional backpack",
+            "price": "89.99",
+            "image": "backpack.jpg",
+            "category": 2,
+            "rating": 4.2,
+            "stock": 75
+        }
+    },
+    {
+        "model": "recommendations.discount",
+        "pk": 1,
+        "fields": {
+            "name": "Summer Tech Sale",
+            "description": "Get amazing discounts on all electronics",
+            "discount_type": "percentage",
+            "value": 20,
+            "start_date": "2025-01-01",
+            "end_date": "2025-02-01",
+            "max_uses": 1000,
+            "current_uses": 150,
+            "min_purchase": 200.00,
+            "is_featured": true
+        }
+    },
+    {
+        "model": "recommendations.discount",
+        "pk": 2,
+        "fields": {
+            "name": "Fashion Flash Sale",
+            "description": "48-hour flash sale on trending fashion items",
+            "discount_type": "percentage",
+            "value": 30,
+            "start_date": "2025-01-03",
+            "end_date": "2025-01-05",
+            "max_uses": 500,
+            "current_uses": 50,
+            "min_purchase": 100.00,
+            "is_featured": false
+        }
+    },
+    {
+        "model": "recommendations.collection",
+        "pk": 1,
+        "fields": {
+            "name": "Tech Essentials",
+            "description": "Must-have gadgets for modern life",
+            "image": "tech-collection.jpg",
+            "created_at": "2025-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "recommendations.collection",
+        "pk": 2,
+        "fields": {
+            "name": "Summer Fashion",
+            "description": "Hot trends for the summer season",
+            "image": "summer-collection.jpg",
+            "created_at": "2025-01-01T00:00:00Z"
+        }
+    }
+]

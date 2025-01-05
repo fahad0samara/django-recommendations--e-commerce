@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Discounts - Smart Recommendations{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gradient mb-8">Special Discounts</h1>
+
+    {% if featured_discount %}
+    <!-- Featured Discount -->
+    <div class="glass-container p-8 mb-12">
+        <div class="flex flex-col lg:flex-row items-center gap-8">
+            <div class="w-full lg:w-1/2">
+                <span class="inline-block px-3 py-1 bg-purple-500 bg-opacity-20 text-purple-300 rounded-lg mb-4">Featured Offer</span>
+                <h2 class="text-2xl font-bold text-indigo-300 mb-4">{{ featured_discount.name }}</h2>
+                <p class="text-gray-400 mb-6">{{ featured_discount.description }}</p>
+                <div class="flex items-center gap-4 mb-6">
+                    <span class="text-4xl font-bold text-gradient">{{ featured_discount.value }}% OFF</span>
+                    {% if featured_discount.max_uses %}
+                    <span class="text-sm text-gray-400">Limited to {{ featured_discount.max_uses }} uses</span>
+                    {% endif %}
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-400">Valid until {{ featured_discount.end_date|date:"F j, Y" }}</span>
+                    {% if featured_discount.code %}
+                    <div class="px-4 py-2 bg-white bg-opacity-10 rounded-lg">
+                        <code class="text-indigo-300">{{ featured_discount.code }}</code>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2">
+                <img src="{% static 'images/discount-banner.jpg' %}" alt="Discount Banner" class="w-full h-64 object-cover rounded-lg">
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- All Discounts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for discount in discounts %}
+        {% if discount != featured_discount %}
+        <div class="glass-card p-6">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-bold text-indigo-300">{{ discount.name }}</h3>
+                <span class="px-3 py-1 bg-purple-500 bg-opacity-20 text-purple-300 rounded-lg">{{ discount.value }}% OFF</span>
+            </div>
+            <p class="text-gray-400 mb-4">{{ discount.description }}</p>
+            {% if discount.code %}
+            <div class="flex items-center gap-4 mb-4">
+                <span class="text-sm text-gray-400">Use code:</span>
+                <code class="px-3 py-1 bg-white bg-opacity-10 rounded-lg text-indigo-300">{{ discount.code }}</code>
+            </div>
+            {% endif %}
+            <div class="flex justify-between items-center text-sm text-gray-400">
+                <span>Valid until {{ discount.end_date|date:"F j, Y" }}</span>
+                {% if discount.max_uses %}
+                <span>{{ discount.max_uses }} uses left</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    {% if not discounts %}
+    <div class="text-center py-12">
+        <p class="text-gray-400">No active discounts available at the moment.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

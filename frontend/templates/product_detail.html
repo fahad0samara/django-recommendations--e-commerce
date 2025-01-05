@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Smart Shop{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <!-- Product Details -->
+    <div class="container mx-auto">
+        <div class="bg-gray-800 rounded-xl shadow-xl overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+                <!-- Product Image -->
+                <div class="relative aspect-w-1 aspect-h-1">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+                             class="w-full h-full object-cover rounded-lg">
+                    {% else %}
+                        <img src="{% static 'images/placeholder.png' %}" alt="Placeholder" 
+                             class="w-full h-full object-cover rounded-lg">
+                    {% endif %}
+                </div>
+
+                <!-- Product Info -->
+                <div class="space-y-6">
+                    <h1 class="text-3xl font-bold text-white">{{ product.name }}</h1>
+                    
+                    <!-- Price -->
+                    <div class="flex items-baseline space-x-4">
+                        <p class="text-3xl font-bold text-purple-400">${{ product.price }}</p>
+                        {% if product.original_price %}
+                            <p class="text-xl text-gray-400 line-through">${{ product.original_price }}</p>
+                            <span class="px-2 py-1 text-sm font-semibold text-white bg-pink-600 rounded-full">
+                                {{ discount }}% OFF
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Stock Status -->
+                    <div>
+                        {% if product.is_in_stock %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-500/10 text-green-400">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                In Stock ({{ product.stock }} available)
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-500/10 text-red-400">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                </svg>
+                                Out of Stock
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Description -->
+                    <div class="prose prose-invert">
+                        <p class="text-gray-300">{{ product.description }}</p>
+                    </div>
+
+                    <!-- Add to Cart Button -->
+                    {% if product.is_in_stock %}
+                        <form id="addToCartForm" method="post" action="{% url 'add_to_cart' product.id %}" class="mt-6">
+                            {% csrf_token %}
+                            <div class="flex space-x-4">
+                                <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ product.stock }}"
+                                       class="w-20 px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <button type="submit" id="addToCartBtn"
+                                        class="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-200">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations Sections -->
+        <div class="mt-16 space-y-16">
+            <!-- Similar Products -->
+            {% if similar_products %}
+            <div class="bg-gray-800 rounded-xl shadow-xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-8">Similar Products</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {% for product in similar_products %}
+                        {% include 'product_card.html' with product=product %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Frequently Bought Together -->
+            {% if frequently_bought %}
+            <div class="bg-gray-800 rounded-xl shadow-xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-8">Frequently Bought Together</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {% for product in frequently_bought %}
+                        {% include 'product_card.html' with product=product %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Personalized Recommendations -->
+            {% if recommended_products %}
+            <div class="bg-gray-800 rounded-xl shadow-xl p-8">
+                <h2 class="text-2xl font-bold text-white mb-8">Recommended for You</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {% for product in recommended_products %}
+                        {% include 'product_card.html' with product=product %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-y-full opacity-0">
+        <div class="toast-message text-white"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('addToCartForm');
+    const quantityInput = document.getElementById('quantity');
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const toast = document.getElementById('toast');
+    const maxStock = {{ product.stock }};
+
+    // Validate quantity input
+    quantityInput.addEventListener('change', function() {
+        const value = parseInt(this.value);
+        if (value < 1) this.value = 1;
+        if (value > maxStock) this.value = maxStock;
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        const originalText = addToCartBtn.innerHTML;
+        addToCartBtn.disabled = true;
+        addToCartBtn.innerHTML = `
+            <svg class="animate-spin h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="ml-2">Adding...</span>
+        `;
+
+        // Send AJAX request
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('Added to cart successfully!', 'success');
+                
+                // Update cart count if available
+                const cartCount = document.querySelector('.cart-count');
+                if (cartCount && data.cart_count !== undefined) {
+                    cartCount.textContent = data.cart_count;
+                    cartCount.style.display = data.cart_count > 0 ? 'flex' : 'none';
+                }
+            } else {
+                throw new Error(data.error || 'Error adding to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast(error.message, 'error');
+        })
+        .finally(() => {
+            // Restore button state
+            addToCartBtn.disabled = false;
+            addToCartBtn.innerHTML = originalText;
+        });
+    });
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        const toastMessage = toast.querySelector('.toast-message');
+        
+        // Set toast style based on type
+        toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-50 ${
+            type === 'success' ? 'bg-green-600' : 'bg-red-600'
+        } text-white`;
+        
+        toastMessage.textContent = message;
+        
+        // Show toast
+        toast.classList.remove('translate-y-full', 'opacity-0');
+        
+        // Hide toast after 3 seconds
+        setTimeout(() => {
+            toast.classList.add('translate-y-full', 'opacity-0');
+        }, 3000);
+    }
+});
+</script>
+{% endblock %}

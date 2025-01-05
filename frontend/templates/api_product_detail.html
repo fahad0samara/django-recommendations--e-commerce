@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}API - {{ product.name }} - Smart Recommendations{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- API Navigation -->
+    <nav class="mb-8 flex items-center gap-2 text-gray-400">
+        <a href="/api/v1/" class="hover:text-indigo-300">API Root</a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <a href="/api/v1/products/" class="hover:text-indigo-300">Products</a>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        <span class="text-indigo-300">{{ product.name }}</span>
+    </nav>
+
+    <div class="glass-container p-8">
+        <div class="flex justify-between items-start mb-8">
+            <h1 class="text-3xl font-bold text-gradient">Product Details API</h1>
+            <div class="flex items-center gap-4">
+                <span class="px-3 py-1 bg-green-500 bg-opacity-20 text-green-300 rounded-lg">GET</span>
+                <code class="px-4 py-2 bg-gray-800 rounded-lg text-gray-300">/api/v1/products/{{ product.id }}/</code>
+            </div>
+        </div>
+
+        <!-- Response Info -->
+        <div class="mb-8">
+            <div class="flex items-center gap-4 mb-4">
+                <span class="px-3 py-1 bg-green-500 bg-opacity-20 text-green-300 rounded-lg">200 OK</span>
+                <span class="text-gray-400">application/json</span>
+            </div>
+            <div class="flex flex-wrap gap-2 text-sm">
+                <span class="px-3 py-1 bg-indigo-500 bg-opacity-20 text-indigo-300 rounded-lg">GET</span>
+                <span class="px-3 py-1 bg-indigo-500 bg-opacity-20 text-indigo-300 rounded-lg">PUT</span>
+                <span class="px-3 py-1 bg-indigo-500 bg-opacity-20 text-indigo-300 rounded-lg">PATCH</span>
+                <span class="px-3 py-1 bg-indigo-500 bg-opacity-20 text-indigo-300 rounded-lg">DELETE</span>
+                <span class="px-3 py-1 bg-indigo-500 bg-opacity-20 text-indigo-300 rounded-lg">HEAD</span>
+                <span class="px-3 py-1 bg-indigo-500 bg-opacity-20 text-indigo-300 rounded-lg">OPTIONS</span>
+            </div>
+        </div>
+
+        <!-- Product Form -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- JSON Response -->
+            <div class="glass-card p-6">
+                <h2 class="text-xl font-semibold text-indigo-300 mb-4">JSON Response</h2>
+                <pre class="bg-gray-900 p-4 rounded-lg overflow-x-auto text-sm text-gray-300">
+{
+    "id": {{ product.id }},
+    "name": "{{ product.name }}",
+    "description": "{{ product.description }}",
+    "price": "{{ product.price }}",
+    "category": {
+        "id": {{ product.category.id }},
+        "name": "{{ product.category.name }}",
+        "parent": {% if product.category.parent %}{{ product.category.parent.id }}{% else %}null{% endif %}
+    },
+    "average_rating": {% if product.average_rating %}{{ product.average_rating }}{% else %}null{% endif %},
+    "total_views": {{ product.total_views }},
+    "created_at": "{{ product.created_at|date:'c' }}",
+    "updated_at": "{{ product.updated_at|date:'c' }}"
+}</pre>
+            </div>
+
+            <!-- HTML Form -->
+            <div class="glass-card p-6">
+                <h2 class="text-xl font-semibold text-indigo-300 mb-4">HTML Form</h2>
+                <form class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Name</label>
+                        <input type="text" value="{{ product.name }}" 
+                               class="w-full px-4 py-2 bg-white bg-opacity-10 border border-gray-600 rounded-lg text-white">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Description</label>
+                        <textarea rows="3" 
+                                  class="w-full px-4 py-2 bg-white bg-opacity-10 border border-gray-600 rounded-lg text-white">{{ product.description }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Price</label>
+                        <input type="number" value="{{ product.price }}" step="0.01"
+                               class="w-full px-4 py-2 bg-white bg-opacity-10 border border-gray-600 rounded-lg text-white">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Category</label>
+                        <select class="w-full px-4 py-2 bg-white bg-opacity-10 border border-gray-600 rounded-lg text-white">
+                            <option value="{{ product.category.id }}">{{ product.category.name }}</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Created At</label>
+                            <input type="text" value="{{ product.created_at|date:'Y-m-d H:i:s' }}" disabled
+                                   class="w-full px-4 py-2 bg-white bg-opacity-10 border border-gray-600 rounded-lg text-gray-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Updated At</label>
+                            <input type="text" value="{{ product.updated_at|date:'Y-m-d H:i:s' }}" disabled
+                                   class="w-full px-4 py-2 bg-white bg-opacity-10 border border-gray-600 rounded-lg text-gray-500">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-4">
+                        <button type="button" class="px-6 py-2 bg-red-500 bg-opacity-20 text-red-300 rounded-lg hover:bg-opacity-30 transition-all">
+                            Delete
+                        </button>
+                        <button type="submit" class="px-6 py-2 bg-indigo-500 bg-opacity-20 text-indigo-300 rounded-lg hover:bg-opacity-30 transition-all">
+                            Update
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

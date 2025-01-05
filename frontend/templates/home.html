@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Smart Recommendations{% endblock %}
+
+{% block extra_head %}
+<style>
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .floating-svg {
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    .feature-icon {
+        transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1);
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-glass {
+        background: rgba(17, 24, 39, 0.4);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+
+    .hero-image-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 30px;
+        transform: perspective(1000px) rotateY(-5deg);
+        transition: transform 0.5s ease;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-image-container:hover {
+        transform: perspective(1000px) rotateY(0deg);
+    }
+
+    .hero-image-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            135deg,
+            rgba(99, 102, 241, 0.2),
+            rgba(139, 92, 246, 0.2)
+        );
+        z-index: 1;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.05);
+        transition: transform 0.5s ease;
+    }
+
+    .hero-image-container:hover .hero-image {
+        transform: scale(1);
+    }
+
+    .glow {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 2;
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+
+    @media (max-width: 768px) {
+        .hero-image-container {
+            height: 300px;
+            transform: none;
+        }
+        .hero-image-container:hover {
+            transform: none;
+        }
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const heroContainer = document.querySelector('.hero-section');
+        const glow = document.createElement('div');
+        glow.className = 'glow';
+        heroContainer.appendChild(glow);
+
+        heroContainer.addEventListener('mousemove', (e) => {
+            const rect = heroContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left - 75;
+            const y = e.clientY - rect.top - 75;
+            glow.style.left = x + 'px';
+            glow.style.top = y + 'px';
+            glow.style.opacity = '1';
+        });
+
+        heroContainer.addEventListener('mouseleave', () => {
+            glow.style.opacity = '0';
+        });
+
+        heroContainer.addEventListener('mouseenter', () => {
+            glow.style.opacity = '1';
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center relative overflow-hidden">
+    <!-- Animated background shapes -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full blur-3xl transform rotate-12 animate-pulse"></div>
+        <div class="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-full blur-3xl transform -rotate-12 animate-pulse delay-700"></div>
+    </div>
+    
+    <div class="container mx-auto px-4 py-16 relative z-10">
+        <div class="hero-glass rounded-3xl p-8 md:p-12">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <h1 class="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+                        Discover Your Perfect Style
+                    </h1>
+                    <p class="text-xl text-gray-300">
+                        Experience personalized shopping with our AI-powered recommendations. Find products that match your unique style and preferences.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="{% url 'products' %}" class="btn-primary px-8 py-3 rounded-lg text-lg font-semibold hover:scale-105 transition-transform">
+                            Browse Collection
+                        </a>
+                        {% if not user.is_authenticated %}
+                        <a href="{% url 'login' %}" class="px-8 py-3 rounded-lg text-lg font-semibold border-2 border-gray-300 text-gray-300 hover:bg-gray-300 hover:text-gray-900 transition-colors">
+                            Sign In
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="hero-image-container h-[500px]">
+                    <div class="hero-image-overlay"></div>
+                    <img 
+                        src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80" 
+                        alt="Fashion Collection" 
+                        class="hero-image"
+                        onerror="this.onerror=null; this.src='https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg?auto=compress&cs=tinysrgb&w=1200'; this.alt='Fashion Collection Fallback'"
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="py-24 bg-gray-900">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-4">
+                Why Choose Us
+            </h2>
+            <p class="text-xl text-gray-400">Experience shopping like never before with our smart features</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- AI Recommendations -->
+            <div class="feature-card glass-container p-8 rounded-xl text-center">
+                <div class="feature-icon w-16 h-16 mx-auto mb-6 text-indigo-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-200 mb-4">Smart AI Recommendations</h3>
+                <p class="text-gray-400">Our AI learns your preferences and suggests products that match your style perfectly</p>
+            </div>
+            
+            <!-- Personalized Experience -->
+            <div class="feature-card glass-container p-8 rounded-xl text-center">
+                <div class="feature-icon w-16 h-16 mx-auto mb-6 text-purple-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-200 mb-4">Personalized Experience</h3>
+                <p class="text-gray-400">Every visit is unique, tailored to your preferences and shopping history</p>
+            </div>
+            
+            <!-- Real-time Updates -->
+            <div class="feature-card glass-container p-8 rounded-xl text-center">
+                <div class="feature-icon w-16 h-16 mx-auto mb-6 text-pink-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-200 mb-4">Real-time Updates</h3>
+                <p class="text-gray-400">Stay informed with instant notifications about new products and special offers</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="py-24 bg-gradient-to-b from-gray-900 to-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-4 gap-8 text-center">
+            <div class="glass-container p-8 rounded-xl">
+                <div class="stats-number mb-2">20K+</div>
+                <p class="text-gray-400">Happy Customers</p>
+            </div>
+            <div class="glass-container p-8 rounded-xl">
+                <div class="stats-number mb-2">50K+</div>
+                <p class="text-gray-400">Products Available</p>
+            </div>
+            <div class="glass-container p-8 rounded-xl">
+                <div class="stats-number mb-2">99%</div>
+                <p class="text-gray-400">Satisfaction Rate</p>
+            </div>
+            <div class="glass-container p-8 rounded-xl">
+                <div class="stats-number mb-2">24/7</div>
+                <p class="text-gray-400">Customer Support</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Products Section -->
+<div class="py-24 bg-gray-900">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-4">
+                Featured Products
+            </h2>
+            <p class="text-xl text-gray-400">Discover our latest and most popular items</p>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-8">
+            {% for product in recent_products %}
+            <div class="glass-container rounded-xl overflow-hidden group hover:scale-105 transition-transform">
+                <div class="relative">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover">
+                    {% else %}
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="Placeholder" class="w-full h-64 object-cover">
+                    {% endif %}
+                    {% if product.discount %}
+                    <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        {{ product.discount }}% OFF
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-200 mb-2">{{ product.name }}</h3>
+                    <p class="text-gray-400 mb-4">{{ product.description|truncatechars:100 }}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+                            ${{ product.price }}
+                        </span>
+                        <a href="{% url 'product_detail' product.id %}" class="btn-primary px-4 py-2 rounded-lg">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter Section -->
+<div class="py-24 bg-gradient-to-t from-gray-900 to-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="glass-container p-12 rounded-2xl text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-4">
+                Stay Updated
+            </h2>
+            <p class="text-xl text-gray-400 mb-8">Subscribe to our newsletter for exclusive offers and updates</p>
+            <form class="flex gap-4 max-w-lg mx-auto">
+                <input type="email" placeholder="Enter your email" class="flex-1 px-6 py-3 rounded-lg bg-gray-800 text-gray-200 border border-gray-700 focus:outline-none focus:border-purple-500">
+                <button type="submit" class="btn-primary px-8 py-3 rounded-lg font-semibold hover:scale-105 transition-transform">
+                    Subscribe
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
