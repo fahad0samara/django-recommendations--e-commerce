@@ -51,7 +51,6 @@ A feature-rich e-commerce platform built with Django and modern web technologies
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/smart-shop.git
 cd smart-shop
 ```
 
